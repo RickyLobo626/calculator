@@ -29,6 +29,8 @@ clearBtn.addEventListener('click', () => {
   operationDisplay.textContent = '';
 });
 
+clearEntryBtn.addEventListener('click', clearEntry);
+
 function enterNumber(num) {
 
   if (equalWasClicked) {
@@ -68,8 +70,6 @@ function enterOperator(op) {
     currentNum = '';
   }
 
-  
-  
   // store operator
   currentOperator = op;
 
@@ -91,7 +91,6 @@ function evaluate() {
     previousNum = currentNum;
     currentNum = '';
   }
-
   
   currentOperator = null;
 
@@ -106,7 +105,8 @@ function enterPoint() {
       currentDisplay.textContent += '.';
     } else {
       currentDisplay.textContent = '0.';
-    } 
+    }
+    currentNum = currentDisplay.textContent;
   }
 }
 
@@ -115,6 +115,14 @@ function reset() {
   previousNum = '';
   currentOperator = null;
   equalWasClicked = false;
+}
+
+function clearEntry() {
+  if (currentDisplay.textContent.length > 0) {
+    currentDisplay.textContent = currentDisplay.textContent.slice(0, -1);
+    currentNum = currentDisplay.textContent;
+  }
+  console.log(currentNum);
 }
 
 function operate(operator, a, b) {
