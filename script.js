@@ -22,7 +22,9 @@ operatorBtns.forEach(button => {
 equalBtn.addEventListener('click', evaluate);
 
 clearBtn.addEventListener('click', () => {
-  
+  reset();
+  currentDisplay.textContent = '0';
+  operationDisplay.textContent = '';
 });
 
 function enterNumber(num) {
@@ -30,18 +32,17 @@ function enterNumber(num) {
     reset();
     currentDisplay.textContent += num;
   }
-  //if display is only a 0 or if current num is empty
+  
   if (currentDisplay.textContent == '0' || currentNum == '') {
     currentDisplay.textContent = '';
-    currentDisplay.textContent += num;
-  } else {
-    currentDisplay.textContent += num;
+  } else if (previousNum == '' && currentNum != '' && currentOperator != null) {
+    previousNum = currentNum;
+    currentDisplay.textContent = '';
   }
 
-  
-  
-    
+  currentDisplay.textContent += num;
   // Store number in the currentNum variable 
+  currentNum = '';
   currentNum = currentDisplay.textContent;
   console.log({previousNum});
   console.log({currentNum});
@@ -49,18 +50,19 @@ function enterNumber(num) {
 
 function enterOperator(op) {
   
-
   // If two numbers are stored, operate
   if (previousNum != '' && currentNum != '') {
     currentNum = operate(currentOperator, previousNum, currentNum);
     currentDisplay.textContent = currentNum;
     currentOperator = null;
     previousNum = '';
+  } else {
+    // Store currentNum on previousNum and empty currentNum for the next value
+    previousNum = currentNum;
+    currentNum = '';
   }
 
-  // Store currentNum on previousNum and empty currentNum for the next value
-  previousNum = currentNum;
-  currentNum = '';
+  
   
   // store operator
   currentOperator = op;
@@ -79,11 +81,13 @@ function evaluate() {
     currentDisplay.textContent = currentNum;
     currentOperator = null;
     previousNum = '';
-  } 
+  } else {
+    // Store currentNum on previousNum and empty currentNum for the next value
+    previousNum = currentNum;
+    currentNum = '';
+  }
 
-  // Store currentNum on previousNum and empty currentNum for the next value
-  previousNum = currentNum;
-  currentNum = '';
+  
   
   equalWasClicked = true;
 
