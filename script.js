@@ -15,6 +15,8 @@ numberBtns.forEach(button => {
   button.addEventListener('click', () => enterNumber(button.textContent));
 });
 
+pointBtn.addEventListener('click', enterPoint)
+
 operatorBtns.forEach(button => {
   button.addEventListener('click', () => enterOperator(button.textContent));
 });
@@ -28,11 +30,12 @@ clearBtn.addEventListener('click', () => {
 });
 
 function enterNumber(num) {
+
   if (equalWasClicked) {
     reset();
     currentDisplay.textContent += num;
   }
-  
+
   if (currentDisplay.textContent == '0' || currentNum == '') {
     currentDisplay.textContent = '';
   } else if (previousNum == '' && currentNum != '' && currentOperator != null) {
@@ -40,10 +43,13 @@ function enterNumber(num) {
     currentDisplay.textContent = '';
   }
 
+  // Show number
   currentDisplay.textContent += num;
+
   // Store number in the currentNum variable 
   currentNum = '';
   currentNum = currentDisplay.textContent;
+
   console.log({previousNum});
   console.log({currentNum});
 }
@@ -79,7 +85,6 @@ function evaluate() {
   if (previousNum != '' && currentNum != '') {
     currentNum = operate(currentOperator, previousNum, currentNum);
     currentDisplay.textContent = currentNum;
-    currentOperator = null;
     previousNum = '';
   } else {
     // Store currentNum on previousNum and empty currentNum for the next value
@@ -88,12 +93,21 @@ function evaluate() {
   }
 
   
-  
-  equalWasClicked = true;
+  currentOperator = null;
 
   console.log({previousNum});
   console.log({currentNum});
   console.log({currentOperator});
+}
+
+function enterPoint() {
+  if (!isDecimal(currentDisplay.textContent)) {
+    if (currentDisplay.textContent != '') {
+      currentDisplay.textContent += '.';
+    } else {
+      currentDisplay.textContent = '0.';
+    } 
+  }
 }
 
 function reset() {
@@ -137,4 +151,11 @@ function multiply(a, b) {
 
 function divide(a, b) {
   return a / b;
+}
+
+function isDecimal(str) {
+  if (str.includes('.')) {
+    return true;
+  }
+  return false;
 }
