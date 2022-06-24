@@ -1,0 +1,114 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  font-family: 'Play', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(130, 90, 200, 0.7) 0%, rgba(0, 109, 225, 0.7) 100%);
+  padding: 0;
+  margin: 0;
+}
+
+main{
+  margin-bottom: 4rem
+}
+
+#calculator {
+  background-color: rgb(0, 110, 225);
+  min-height: 100%;
+  border: 25px solid rgb(0, 110, 225);
+  border-radius: 15px;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  grid-template-columns: repeat(4, 80px);
+  grid-template-rows: minmax(120px, auto) repeat(5, 80px);
+  row-gap: 20px;
+  column-gap: 20px;
+  box-shadow: 0 0 50px black;
+}
+
+footer {
+  color: rgb(255, 255, 255);
+  background-color: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 10px black;
+  width: 100%;
+  position:fixed;
+  bottom:0;
+  text-align: center;
+}
+
+footer p {
+  line-height: 5px;
+}
+
+#calculator button {
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 2rem;
+  outline: none;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0px 0 6px rgb(0, 0, 0);
+}
+
+#calculator button:active {
+  transform: scale(0.95);
+}
+
+.span-col {
+  grid-column: span 2;
+}
+
+.span-row {
+  grid-row: span 2;
+}
+
+#display {
+  background-color: rgb(150, 120, 200);
+  color: yellow;
+  min-height: 150px;
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 10px 20px;
+  word-wrap: break-word;
+  word-break: break-all;
+  margin-bottom: 10px;
+  border-radius: 15px;
+  border: 3px solid rgba(0, 0, 0, 0.2);
+  text-align: right;
+}
+
+#operation {
+  font-size: 1.5rem;
+}
+
+#current {
+  font-size: 2.5rem;
+}
+
+.blue {
+  background-color: rgba(0, 100, 220, 1);
+}
+
+.blue:hover {
+  background-color: rgba(0, 90, 210, 1);
+}
+
+.red {
+  background-color: rgb(185, 55, 55);
+}
+
+.red:hover {
+  background-color: rgba(175, 45, 45);
+}
