@@ -8,35 +8,27 @@ const operatorBtns = document.querySelectorAll('[data-operator]');
 const pointBtn = document.querySelector('[data-point]');
 let operationDisplay = document.getElementById('operation');
 let currentDisplay = document.getElementById('current');
-let currentNum, previousNum, currentOperator, equalWasClicked;
+let currentNum, previousNum, currentOperator;
 reset();
+
+// Click events
+clearEntryBtn.addEventListener('click', clearEntry);
+pointBtn.addEventListener('click', enterPoint);
+equalBtn.addEventListener('click', evaluate);
+clearBtn.addEventListener('click', reset);
 
 numberBtns.forEach(button => {
   button.addEventListener('click', () => enterNumber(button.textContent));
 });
 
-pointBtn.addEventListener('click', enterPoint)
-
 operatorBtns.forEach(button => {
   button.addEventListener('click', () => enterOperator(button.textContent));
 });
 
-equalBtn.addEventListener('click', evaluate);
-
-clearBtn.addEventListener('click', () => {
-  reset();
-  currentDisplay.textContent = '0';
-  operationDisplay.textContent = '';
-});
-
-clearEntryBtn.addEventListener('click', clearEntry);
+// Keydown event
+window.addEventListener('keydown', getKey);
 
 function enterNumber(num) {
-
-  if (equalWasClicked) {
-    reset();
-    currentDisplay.textContent += num;
-  }
 
   if (currentDisplay.textContent == '0' || currentNum == '') {
     currentDisplay.textContent = '';
@@ -51,9 +43,6 @@ function enterNumber(num) {
   // Store number in the currentNum variable 
   currentNum = '';
   currentNum = currentDisplay.textContent;
-
-  console.log({previousNum});
-  console.log({currentNum});
 }
 
 function enterOperator(op) {
@@ -62,41 +51,35 @@ function enterOperator(op) {
   if (previousNum != '' && currentNum != '') {
     currentNum = operate(currentOperator, previousNum, currentNum);
     currentDisplay.textContent = currentNum;
+    operationDisplay.textContent = `${currentNum} ${op}`;
     currentOperator = null;
     previousNum = '';
   } else {
-    // Store currentNum on previousNum and empty currentNum for the next value
-    previousNum = currentNum;
-    currentNum = '';
-  }
-
-  // store operator
-  currentOperator = op;
-
-  equalWasClicked = false;
-
-  console.log({previousNum});
-  console.log({currentNum});
-  console.log({currentOperator});
-}
-
-function evaluate() {
-  // If two numbers are stored, operate
-  if (previousNum != '' && currentNum != '') {
-    currentNum = operate(currentOperator, previousNum, currentNum);
-    currentDisplay.textContent = currentNum;
-    previousNum = '';
-  } else {
+    operationDisplay.textContent = `${currentNum} ${op}`;
     // Store currentNum on previousNum and empty currentNum for the next value
     previousNum = currentNum;
     currentNum = '';
   }
   
-  currentOperator = null;
+  // Store operator
+  currentOperator = op;
+}
 
-  console.log({previousNum});
-  console.log({currentNum});
-  console.log({currentOperator});
+function evaluate() {
+  if (currentOperator != null) {
+    operationDisplay.textContent = `${previousNum} ${currentOperator} ${currentNum} =`;
+    // If two numbers are stored, operate
+    if (previousNum != '' && currentNum != '') {
+      currentNum = roundDecimals(operate(currentOperator, previousNum, currentNum));
+      currentDisplay.textContent = currentNum;
+      previousNum = '';
+    } else {
+      // Store currentNum on previousNum and empty currentNum for the next value
+      previousNum = currentNum;
+      currentNum = '';
+    }
+    currentOperator = null;
+  }
 }
 
 function enterPoint() {
@@ -114,15 +97,40 @@ function reset() {
   currentNum = '';
   previousNum = '';
   currentOperator = null;
-  equalWasClicked = false;
+  currentDisplay.textContent = '0';
+  operationDisplay.textContent = '';
 }
 
 function clearEntry() {
-  if (currentDisplay.textContent.length > 0) {
+  if (currentDisplay.textContent.length > 0 && currentDisplay.textContent != '0') {
     currentDisplay.textContent = currentDisplay.textContent.slice(0, -1);
     currentNum = currentDisplay.textContent;
   }
-  console.log(currentNum);
+  if (currentDisplay.textContent == '') {
+    currentDisplay.textContent = '0';
+  }
+}
+
+function getKey(e) {
+  if (e.key >= 0 && e.key <= 9) {
+    enterNumber(e.key);
+  } else if (e.key == '.') {
+      enterPoint();
+  } else if (e.key == '=' || e.key == 'Enter') {
+      evaluate();
+  } else if (e.key == 'Backspace') {
+      clearEntry();
+  } else if (e.key == 'Escape') {
+      reset();
+  } else if (e.key == '+' || e.key == '-' || e.key == '*' || e.key == '/') {
+      if (e.key == '/') {
+        enterOperator('÷');
+      } else if (e.key == '*') {
+        enterOperator('×');
+      } else {
+        enterOperator(e.key);
+      }
+  }
 }
 
 function operate(operator, a, b) {
@@ -166,4 +174,9 @@ function isDecimal(str) {
     return true;
   }
   return false;
+}
+
+// Round to 3 decimals
+function roundDecimals(num) {
+  return Math.round(num * 1000) / 1000;
 }
